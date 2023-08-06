@@ -1,0 +1,20 @@
+Laptop:2200:Electronics:1099.99:StoreA
+Chair:800:Furniture:299.95:StoreB
+Smartphone:180:Electronics:799.99:StoreC
+Bookshelf:300:Furniture:149.99:StoreD
+Headphones:100:Electronics:79.99:StoreE
+Sofa:1200:Furniture:999.99:StoreF
+Tablet:600:Electronics:499.99:StoreG
+Bed:1800:Furniture:1299.99:StoreH
+Camera:400:Electronics:699.99:StoreI
+Desk:500:Furniture:249.99:StoreJ
+Microwave:600:Appliances:199.99:StoreK
+Refrigerator:1500:Appliances:899.99:StoreL
+Toaster:200:Appliances:49.99:StoreM
+Washing Machine:800:Appliances:599.99:StoreN
+Television:300:Electronics:599.99:StoreO
+Dining Table:1000:Furniture:799.99:StoreP
+Printer:300:Electronics:129.99:StoreQ
+Couch:1400:Furniture:1199.99:StoreR
+Vacuum Cleaner:400:Appliances:149.99:StoreS
+Water Heater:600:Appliances:249.99:StoreT
