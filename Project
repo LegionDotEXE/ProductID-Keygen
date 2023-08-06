@@ -1,0 +1,203 @@
+
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+bool openFile(ifstream &file, const string &filename);
+bool openFile(ofstream &file, const string &filename);
+void generateKeys(ifstream &inputFile, ofstream &outputFile);
+
+int main()
+{
+    int choice;
+
+    cout << "Enter choice (1 or 2): ";
+    cin >> choice;
+
+    switch (choice)
+    {
+        case 1:
+        {
+            ifstream inputFile;
+            ofstream outputFile;
+
+            if (!openFile(inputFile, "projectinput.txt"))
+            {
+                cout << "Error: Input file not found." << endl;
+                return -1;
+            }
+
+            if (!openFile(outputFile, "projectinput_keys.txt"))
+            {
+                cout << "Error: Output file not found." << endl;
+                return -1;
+            }
+
+            vector<string> keys;
+            generateKeys(inputFile, outputFile);
+
+            cout << "OUTPUTTED:" << endl;
+            for (const string &key : keys)
+            {
+                cout << key << endl;
+            }
+
+            return 0;
+        }
+
+        case 2:
+        {
+            ifstream keysFile;
+            ifstream inputFile;
+            ofstream finalFile;
+
+            if (!openFile(keysFile, "projectinput_keys.txt"))
+            {
+                cout << "Error: Keys file not found." << endl;
+                return -1;
+            }
+
+            if (!openFile(inputFile, "projectinput.txt"))
+            {
+                cout << "Error: Input file not found." << endl;
+                return -1;
+            }
+
+            if (!openFile(finalFile, "projectinput_final.txt"))
+            {
+                cout << "Error: Final output file not found." << endl;
+                return -1;
+            }
+
+            string lineKeys, lineInput;
+
+            cout << "OUTPUTTED:" << endl;
+            while (getline(inputFile, lineInput) && getline(keysFile, lineKeys))
+            {
+                if (lineInput.empty() && lineKeys.empty())
+                    continue;
+                else if (lineInput.empty() || lineKeys.empty())
+                {
+                    cout << "Both files do not have the same amount of lines!" << endl;
+                    return -2;
+                }
+
+                string finalLine = lineKeys + ":" + lineInput;
+
+                cout << finalLine << endl;
+                finalFile << finalLine << endl;
+            }
+
+            return 0;
+        }
+
+        default:
+            cout << "No actions for " << choice << endl;
+            return 0;
+    }
+}
+
+void generateKeys(ifstream &inputFile, ofstream &outputFile)
+{
+    string line, temp;
+    string key = "";
+
+    string fields[6];
+
+    string delimiter = ":";
+
+    vector<string> keys;
+
+    while (getline(inputFile, line))
+    {
+        if (line.empty()) // skip empty line
+            continue;
+        key = "B";
+        temp = line;
+        size_t pos;
+        for (int i = 0; i < 5; i++)
+        {
+            pos = temp.find(delimiter);
+            fields[i] = temp.substr(0, pos);
+            temp.erase(0, pos + 1);
+        }
+        fields[5] = temp;
+
+        char tempchar = toupper(fields[5][0]);
+        key += tempchar;    // Category
+        tempchar = toupper(fields[4][0]);
+        key += tempchar;    // Seller
+        tempchar = toupper(fields[0][0]);
+        key += tempchar;    // Name
+
+        key += "-";
+
+        stringstream ss;
+        string newfield3 = "";
+        int price = stod(fields[3]);
+        if (price > 65535)
+        {
+            ss << hex << 65535;
+            newfield3 = ss.str();
+        }
+        else
+        {
+            ss << hex << price;
+            for (int i = ss.str().length(); i < 4; i++)
+                newfield3 += "0";
+            newfield3 += ss.str();
+        }
+        key += newfield3;                           // Price
+
+        key += "-";
+
+        string newfield1 = "";
+        int weight = stod(fields[1]);
+        while (weight > 1000)
+            weight /= 10;
+
+        bool invalid;
+        do
+        { // VECTOR INPUT VALIDATION
+            invalid = false;
+
+            for (const string &existingKey : keys)
+            {
+                if (stoi(existingKey.substr(9, 3)) == weight)
+                {
+                    invalid = true;
+
+                    if (weight >= 999)
+                        weight = 0;
+                    else
+                        weight++;
+
+                    break;
+                }
+            }
+        } while (invalid);
+        for (int i = to_string(weight).length(); i < 3; i++)
+            newfield1 += "0";
+        newfield1 += to_string(weight);
+        key += newfield1;                           // Weight
+
+        keys.push_back(key);
+        outputFile << key << endl;
+    }
+}
+
+bool openFile(ifstream &file, const string &filename)
+{
+    file.open(filename);
+    return file.is_open();
+}
+
+bool openFile(ofstream &file, const string &filename)
+{
+    file.open(filename);
+    return file.is_open();
+}
