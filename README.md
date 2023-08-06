@@ -11,4 +11,8 @@ This is a simple C++ program that generates keys based on input data. It takes t
 ## How to Use
 
 1. Clone the repository to your local machine:
+   '''
+   git clone https://github.com/yourusername/your-repo.git
+   '''
+   
 
